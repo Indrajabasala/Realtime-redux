@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     textAlign: 'center',
     color: 'black',
-    backgroundColor:'#d1d7e0'
+    backgroundColor:' #d1d7e0'
     
   },
 
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     textAlign: 'center',
     color: 'black',
-    backgroundColor:'#d1d7e0',
+    backgroundColor:' #d1d7e0',
     height: '250px',
     width: '600px',
     padding: '70px'
@@ -60,11 +60,14 @@ const useStyles = makeStyles((theme) => ({
 // }  
 }));
 
- function ButtonAppBar() {
+ function Welcome() {
   const classes = useStyles();
 
   let history = useHistory();
  
+const handleRoute=(page)=> {
+  history.push({pathname: '/registeras', state: { page }});
+};
 
   return (
     <div className={classes.page}>
@@ -78,8 +81,8 @@ const useStyles = makeStyles((theme) => ({
           <Typography variant="h5" className={classes.title}>
             Welcome to my Page 
           </Typography>
-          <Button color="inherit"    onClick={()=> history.push('./register')}  >Register</Button>
-          <Button color="inherit"  onClick={()=> history.push('./login')}  >Login</Button>
+          <Button color="inherit"    onClick={() => handleRoute('register')}  >Register</Button>
+          <Button color="inherit"  onClick={()=> handleRoute('login')}  >Login</Button>
                 </Toolbar>
                      </AppBar>
                      <br/>
@@ -130,4 +133,4 @@ const useStyles = makeStyles((theme) => ({
   );
 }
 
-export default  withRouter(ButtonAppBar)
+export default Welcome

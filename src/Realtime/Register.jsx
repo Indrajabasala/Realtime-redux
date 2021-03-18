@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory, withRouter } from "react-router-dom";
+import {useSelector,useDispatch} from 'react-redux';
+import {doctor} from './Registerreducer';
  
 function Copyright() {
   return (
@@ -49,10 +51,35 @@ const useStyles = makeStyles((theme) => ({
 
  function Register() {
   const classes = useStyles();
+  const[state,setState]=useState({firstName:'', lastName:'', email:'',  password:''})
+  const dispatch=useDispatch();
+let {firstName, lastName, email,  password}=state
 
   let history = useHistory();
- 
+  console.log('check',history)
+  let role=history.location.state.role
 
+    
+  const handleChange = ({ target: { name, value } }) => {
+    setState(prevState => ({ ...prevState, [name]: value }));
+}
+
+
+
+   const onSubmit=()=>{
+    let data={
+      firstName:state.firstName,
+      lastName:state.lastName,
+      email:state.email,
+      password:state.password
+    }
+    dispatch(doctor(data,role ))
+   
+    history.push({pathname: '/Login', state: { role }});
+
+  
+   }
+   
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -61,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Register
+          Register as {role}
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -75,6 +102,8 @@ const useStyles = makeStyles((theme) => ({
                 id="firstName"
                 label="First Name"
                 autoFocus
+                value={firstName}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -86,6 +115,8 @@ const useStyles = makeStyles((theme) => ({
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                value={lastName}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -97,6 +128,8 @@ const useStyles = makeStyles((theme) => ({
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={email}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -109,6 +142,8 @@ const useStyles = makeStyles((theme) => ({
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -118,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
               />
             </Grid>
           </Grid>
-          <Button  onClick={()=> history.push('/Login')}
+          <Button  onClick={onSubmit}
             type="submit"
             fullWidth
             variant="contained"
@@ -127,6 +162,8 @@ const useStyles = makeStyles((theme) => ({
           >
             submit
           </Button>
+
+
           <Grid container justify="flex-end">
             <Grid item>
               <Link href="#" variant="body2">

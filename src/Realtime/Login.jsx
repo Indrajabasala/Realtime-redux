@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useHistory } from "react-router-dom";
+import {useSelector} from 'react-redux';
 
 function Copyright() {
   return (
@@ -48,8 +50,45 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
   const classes = useStyles();
+  const[state,setState]=useState({email:'',password:''})  
+  let {  email,  password}=state
+
+  let history = useHistory();
+  console.log('check',history)
+  let role=history.location.state.role
+  const doctorData= useSelector(state => state.doctorData);
+  const patientData= useSelector(state => state.patientData);
+  console.log('doctorData',doctorData)
+      console.log('patientData',patientData)
+
+
+          
+  const handleChange = ({ target: { name, value } }) => {
+    setState(prevState => ({ ...prevState, [name]: value }));
+}
+
+   const handleSave=(e)=> {
+    e.preventDefault();  
+ 
+let userData;
+debugger
+if(role === 'patient'){
+  userData = patientData.filter(x => x.email === email);
+}else{
+  userData = doctorData.filter(x => x.email === email);
+}
+
+   if( userData[0].password === password){
+    history.push({pathname: '/Home', state: { role }});
+      }
+      else{
+        alert('please enter valid email and password')
+    }
+  }
 
   return (
+
+
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -57,7 +96,7 @@ export default function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Login
+          Login as {role}
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -71,6 +110,8 @@ export default function Login() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={email}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -83,6 +124,8 @@ export default function Login() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -92,7 +135,7 @@ export default function Login() {
               />
             </Grid>
           </Grid>
-          <Button
+          <Button  onClick={handleSave}
             type="submit"
             fullWidth
             variant="contained"
